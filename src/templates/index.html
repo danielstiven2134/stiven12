@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+<h1 class="text-center mt-5 mb-5 text-primary">Registro de Calificaciones</h1>
+
+<div class="container">
+    <div class="card shadow">
+        <div class="card-body">
+            <form action="/ETU" method="post"> 
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Correo</label>
+                        <input type="text" class="form-control mb-3" name="Correo">
+                    </div>
+                    <div class="col">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control mb-3" name="Nombre">
+                    </div>
+                    <div class="col">
+                        <label>Calificaciones</label>
+                        <input type="number" class="form-control mb-3" name="Calificaciones">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary mb-3 mt-4" type="submit">Guardar</button>                       
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tabla -->
+            <table class="table table-bordered">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Calificaciones</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Borrar</th>
+                </thead>
+                <tbody>
+                {% for d in data %}
+                    <tr>
+                        <td>{{ d.ID }}</td>
+                        <td>{{ d.correo }}</td>
+                        <td>{{ d.nombre }}</td>
+                        <td>{{ d.calificacion }}</td>
+                        <td><button class="btn btn-primary btn-sm" onclick="populateEditForm('{{ d.ID }}', '{{ d.correo }}', '{{ d.nombre }}', '{{ d.calificacion }}')" data-bs-toggle="modal" data-bs-target="#editModal">Editar</button></td>
+                        <td><a href="{{ url_for('delete', id=d.ID) }}" class="btn btn-danger btn-sm">Borrar</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Editar Registro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" method="post">
+            <input type="hidden" name="id" id="editID">
+            <div class="mb-3">
+                <label for="editCorreo" class="form-label">Correo</label>
+                <input type="text" class="form-control" id="editCorreo" name="Correo">
+            </div>
+            <div class="mb-3">
+                <label for="editNombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="editNombre" name="Nombre">
+            </div>
+            <div class="mb-3">
+                <label for="editCalificaciones" class="form-label">Calificaciones</label>
+                <input type="number" class="form-control" id="editCalificaciones" name="Calificaciones">
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function populateEditForm(id, correo, nombre, calificacion) {
+    document.getElementById('editID').value = id;
+    document.getElementById('editCorreo').value = correo;
+    document.getElementById('editNombre').value = nombre;
+    document.getElementById('editCalificaciones').value = calificacion;
+    document.getElementById('editForm').action = '/Editar/' + id;
+}
+</script>
+
+</body>
+</html>
